@@ -15,8 +15,6 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration cfg = new CorsConfiguration();
-                // CHANGED: Allow ALL origins ("*") for testing. 
-                // This ensures your browser and local React can both connect.
                 cfg.setAllowedOriginPatterns(List.of("*")); 
                 cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 cfg.setAllowedHeaders(List.of("*"));
@@ -24,7 +22,7 @@ public class SecurityConfig {
                 return cfg;
             }))
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll() // Allow all API endpoints
+                .anyRequest().permitAll()
             );
         return http.build();
     }
