@@ -11,16 +11,21 @@ import java.util.List;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http
+            .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration cfg = new CorsConfiguration();
-                cfg.setAllowedOrigins(List.of("http://localhost:3000"));
+                // CHANGED: Allow ALL origins ("*") for testing. 
+                // This ensures your browser and local React can both connect.
+                cfg.setAllowedOriginPatterns(List.of("*")); 
                 cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 cfg.setAllowedHeaders(List.of("*"));
                 cfg.setAllowCredentials(true);
                 return cfg;
             }))
-            .authorizeHttpRequests(auth -> auth.requestMatchers("/api/**").permitAll().anyRequest().permitAll());
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().permitAll() // Allow all API endpoints
+            );
         return http.build();
     }
 }
