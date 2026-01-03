@@ -15,14 +15,18 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration cfg = new CorsConfiguration();
+                
+                // IMPORTANT: Use setAllowedOriginPatterns instead of setAllowedOrigins
+                // This allows the "*" while allowCredentials is true
                 cfg.setAllowedOriginPatterns(List.of("*")); 
+                
                 cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 cfg.setAllowedHeaders(List.of("*"));
                 cfg.setAllowCredentials(true);
                 return cfg;
             }))
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
+                .anyRequest().permitAll() 
             );
         return http.build();
     }
