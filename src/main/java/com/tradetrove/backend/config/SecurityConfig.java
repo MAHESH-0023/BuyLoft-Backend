@@ -9,6 +9,7 @@ import java.util.List;
 
 @Configuration
 public class SecurityConfig {
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -16,8 +17,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration cfg = new CorsConfiguration();
                 
-                // IMPORTANT: Use setAllowedOriginPatterns instead of setAllowedOrigins
-                // This allows the "*" while allowCredentials is true
+                // This line is the fix. "Patterns" allows "*" with "AllowCredentials"
                 cfg.setAllowedOriginPatterns(List.of("*")); 
                 
                 cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
@@ -26,8 +26,9 @@ public class SecurityConfig {
                 return cfg;
             }))
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll() 
+                .anyRequest().permitAll() // Disables login requirement for all APIs
             );
+            
         return http.build();
     }
 }
