@@ -1,8 +1,14 @@
-FROM maven:3.8.5-openjdk-17 AS build
+# Use Java 21 for the build stage
+FROM maven:3.9.5-eclipse-temurin-21 AS build
+WORKDIR /app
 COPY . .
-RUN mvn clean package -DskipTests
+# Use the Maven wrapper in your repo to build
+RUN chmod +x ./mvnw
+RUN ./mvnw clean package -DskipTests
 
-FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/*.jar demo.jar
+# Use a slim Java 21 runtime for the final image
+FROM eclipse-temurin:21-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","demo.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
