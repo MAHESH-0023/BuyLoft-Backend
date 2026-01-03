@@ -1,13 +1,13 @@
-# Use Java 21 for the build stage
-FROM maven:3.9.5-eclipse-temurin-21 AS build
+# Stage 1: Build your application using Maven and Java 21
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY . .
-# Use the Maven wrapper in your repo to build
+# Make the build script executable and run it
 RUN chmod +x ./mvnw
 RUN ./mvnw clean package -DskipTests
 
-# Use a slim Java 21 runtime for the final image
-FROM eclipse-temurin:21-jdk-slim
+# Stage 2: Run your application using a more standard Java 21 image
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
