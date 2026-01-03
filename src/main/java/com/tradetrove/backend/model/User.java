@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "users")
+@Table(name = "app_users")
 @Data 
 public class User {
     @Id
@@ -21,12 +21,12 @@ public class User {
     private String password;
 
     private String whatsappNumber;
-    private String address; // For Admin view
-    private String about;   // For Admin view
+    private String address;
+    private String about;   
     private String role = "USER"; 
 
     private String profileImageType;
-    @Lob
-    @Column(columnDefinition = "LONGBLOB")
+    
+    @Column(name = "profile_image_data")
     private byte[] profileImageData;
 }
