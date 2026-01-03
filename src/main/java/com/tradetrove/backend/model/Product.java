@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "products")
+@Table(name = "app_products")
 @Data
 public class Product {
     @Id
@@ -16,8 +16,7 @@ public class Product {
     private Double price;
     private String category; 
 
-    @Lob
-    @Column(columnDefinition = "LONGBLOB")
+    @Column(name = "image_data")
     private byte[] imageData; 
 
     private String imageType; 
